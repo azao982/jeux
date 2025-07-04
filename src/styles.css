@@ -1,62 +1,176 @@
+/* Import Google Fonts for a modern, clean look */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;600;700&display=swap");
+
+:root {
+  /* Define a vibrant and harmonious color palette */
+  --primary-color: #6c63ff; /* A vibrant purple for actions/highlights */
+  --secondary-color: #00a86b; /* A contrasting green for success/done */
+  --accent-color-light: #ffc0cb; /* Soft pink for background elements */
+  --background-light: #f8f9fa; /* Light background for the overall page */
+  --card-background: #ffffff; /* White background for containers/cards */
+  --text-dark: #343a40; /* Dark text for readability */
+  --text-medium: #6c757d; /* Medium grey for secondary text */
+  --border-color: #e9ecef; /* Light grey for borders */
+  --shadow-light: rgba(0, 0, 0, 0.08); /* Subtle shadow for depth */
+  --shadow-medium: rgba(0, 0, 0, 0.15); /* Stronger shadow on hover */
+
+  /* Priority Colors */
+  --priority-high: #dc3545; /* Red for high priority */
+  --priority-medium: #ffc107; /* Yellow/Orange for medium priority */
+  --priority-low: #28a745; /* Green for low priority */
+
+  /* Done Task Styles */
+  --done-text-color: #adb5bd; /* Faded text for completed tasks */
+  --done-bg-color: #f0f2f5; /* Slightly darker background for done tasks */
+}
+
 body {
-  font-family: "Segoe UI", sans-serif;
-  background: linear-gradient(to right, #e3f2fd, #ffffff);
+  font-family: cursive; /* Clean, modern sans-serif font */
+  background: linear-gradient(
+    135deg,
+    var(--background-light) 0%,
+    var(--accent-color-light) 100%
+  );
   margin: 0;
-  padding: 0;
+  padding: 30px 20px;
+  color: var(--text-dark);
+  min-height: 100vh;
   display: flex;
   justify-content: center;
-  min-height: 100vh;
+  align-items: flex-start; /* Align to top to allow scrolling for many tasks */
+  box-sizing: border-box; /* Include padding in element's total width and height */
 }
 
 .container {
-  max-width: 700px;
+  background: var(--card-background);
+  padding: 40px;
+  border-radius: 20px; /* More pronounced rounded corners */
+  box-shadow: 0 10px 30px var(--shadow-light);
+  max-width: 700px; /* Optimal width for readability */
   width: 100%;
-  padding: 2rem;
-  margin: auto;
-  background: #fff;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  border-radius: 16px;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Smooth transitions */
+}
+
+.container:hover {
+  transform: translateY(-5px); /* Subtle lift effect on hover */
+  box-shadow: 0 15px 40px var(--shadow-medium);
 }
 
 .title {
+  font-family: cursive; /* Distinct font for the title */
   text-align: center;
-  margin-bottom: 1.5rem;
-  font-size: 2rem;
-  color: #1565c0;
+  color: var(--primary-color);
+  margin-bottom: 35px;
+  font-size: 2.8rem; /* Larger and more impactful title */
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05); /* Subtle text shadow */
 }
 
+/* --- Form Styling --- */
 .form {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
-  justify-content: space-between;
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  gap: 15px; /* Increased spacing between form elements */
+  margin-bottom: 30px;
 }
 
-.form input,
-.form select {
-  padding: 10px;
-  border: 1px solid #ccc;
+.form input[type="text"],
+.form select,
+.form input[type="date"] {
+  flex-grow: 1; /* Allow elements to take available space */
+  padding: 14px 18px; /* More padding for better touch targets */
+  border: 1px solid var(--border-color);
   border-radius: 12px;
-  flex: 1;
-  font-size: 1rem;
-  min-width: 150px;
+  font-size: 1.05rem;
+  color: var(--text-dark);
+  background-color: #fdfdfd; /* Slightly off-white background */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  min-width: 150px; /* Ensure minimum width for inputs */
+}
+
+.form input:focus,
+.form select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2); /* Focus ring effect */
 }
 
 .form button {
-  background-color: #1565c0;
+  background-color: var(--primary-color);
   color: white;
-  padding: 10px 16px;
   border: none;
   border-radius: 12px;
+  padding: 14px 25px;
+  font-size: 1.05rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s ease, transform 0.2s ease,
+    box-shadow 0.3s ease;
+  flex-shrink: 0; /* Prevent button from shrinking */
 }
 
 .form button:hover {
-  background-color: #0d47a1;
+  background-color: #5f59cc; /* Slightly darker primary on hover */
+  transform: translateY(-2px); /* Subtle lift */
+  box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
 }
 
+.form button:active {
+  transform: translateY(0); /* Press down effect */
+}
+
+/* --- Options / Filters --- */
+.options {
+  display: flex;
+  gap: 15px; /* Consistent gap with form */
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  align-items: center; /* Vertically align items */
+}
+
+.options input,
+.options select {
+  flex-grow: 1;
+  padding: 12px 16px; /* Slightly less padding than form inputs */
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 1rem;
+  color: var(--text-dark);
+  background-color: #fdfdfd;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  min-width: 150px;
+}
+
+.options input:focus,
+.options select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
+}
+
+.clear-btn {
+  background-color: var(--priority-high); /* Red for destructive action */
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.clear-btn:hover {
+  background-color: #c82333; /* Darker red on hover */
+  transform: translateY(-2px);
+}
+.clear-btn:active {
+  transform: translateY(0);
+}
+
+/* --- Task List Styling --- */
 .task-list {
   list-style: none;
   padding: 0;
@@ -64,66 +178,209 @@ body {
 }
 
 .task {
-  background: #f5f5f5;
-  border-radius: 12px;
-  padding: 12px 16px;
-  margin-bottom: 12px;
+  background-color: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 15px; /* Rounded corners for each task card */
+  padding: 18px 20px;
+  margin-bottom: 15px; /* Space between task cards */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: 0.2s;
+  transition: all 0.3s ease-in-out; /* Smooth transitions for all properties */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Subtle shadow for cards */
+  cursor: pointer; /* Indicate entire card is clickable for toggle */
 }
 
+.task:last-child {
+  margin-bottom: 0; /* No margin after the last task */
+}
+
+.task:hover {
+  transform: translateX(5px); /* Subtle slide effect on hover */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* Enhanced shadow on hover */
+}
+
+/* Done Task Specific Styles */
 .task.done {
-  opacity: 0.6;
-  text-decoration: line-through;
+  background-color: var(--done-bg-color);
+  border-color: #d1d9e0;
+  color: var(--done-text-color);
+  text-decoration: line-through; /* Strikethrough for completed tasks */
+  opacity: 0.8; /* Slightly faded */
+}
+
+.task.done .text {
+  color: var(--done-text-color); /* Ensure text color is faded */
+}
+
+.task.done .priority,
+.task.done .date {
+  opacity: 0.7; /* Fade meta info more */
+}
+
+.task.done .actions button {
+  opacity: 0.6; /* Fade action buttons */
 }
 
 .task .info {
-  flex: 1;
-  cursor: pointer;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  padding-right: 15px; /* Space before actions */
 }
 
 .task .text {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 500;
+  margin-bottom: 8px; /* Space below task text */
+  word-break: break-word; /* Ensure long text wraps */
 }
 
-.meta {
+.task .meta {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-size: 0.9rem;
+  color: var(--text-medium);
+}
+
+.task .priority {
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 8px; /* Rounded priority tags */
   font-size: 0.85rem;
-  color: #555;
-  margin-top: 4px;
+  text-transform: capitalize; /* Capitalize priority text */
 }
 
-.priority {
-  padding: 3px 8px;
-  border-radius: 10px;
-  font-weight: bold;
-  text-transform: capitalize;
+.task .priority.haute {
+  background-color: var(--priority-high);
+  color: white;
+}
+.task .priority.moyenne {
+  background-color: var(--priority-medium);
+  color: var(--text-dark); /* Ensure contrast for yellow */
+}
+.task .priority.basse {
+  background-color: var(--priority-low);
+  color: white;
 }
 
-.priority.basse {
-  background-color: #c8e6c9;
-  color: #256029;
-}
-.priority.moyenne {
-  background-color: #fff9c4;
-  color: #8f7d00;
-}
-.priority.haute {
-  background-color: #ffcdd2;
-  color: #b71c1c;
+.task .date {
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
-.actions button {
-  background: none;
+.task .actions {
+  display: flex;
+  gap: 8px; /* Space between action buttons */
+  flex-shrink: 0; /* Prevent actions from shrinking */
+}
+
+.task .actions button {
+  background-color: var(--border-color); /* Neutral background for actions */
   border: none;
-  font-size: 1.2rem;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
-  margin-left: 8px;
-  transition: transform 0.2s;
+  font-size: 1.1rem; /* Larger icon size */
+  transition: background-color 0.3s ease, transform 0.2s ease,
+    box-shadow 0.3s ease;
+  color: var(--text-dark); /* Icon color */
 }
 
-.actions button:hover {
-  transform: scale(1.2);
+.task .actions button:hover {
+  background-color: var(--primary-color);
+  color: white; /* White icon on hover */
+  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.task .actions button:active {
+  transform: translateY(0);
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+  .container {
+    padding: 30px;
+  }
+  .title {
+    font-size: 2.2rem;
+    margin-bottom: 25px;
+  }
+  .form,
+  .options {
+    flex-direction: column; /* Stack inputs vertically */
+    gap: 12px;
+  }
+  .form input,
+  .form select,
+  .form button,
+  .options input,
+  .options select,
+  .options button {
+    width: 100%; /* Full width on smaller screens */
+    min-width: unset; /* Remove min-width constraint */
+  }
+  .task {
+    flex-direction: column; /* Stack info and actions vertically */
+    align-items: flex-start; /* Align text to the left */
+    gap: 15px; /* Space between info and actions */
+  }
+  .task .info {
+    width: 100%;
+    padding-right: 0;
+  }
+  .task .actions {
+    width: 100%;
+    justify-content: flex-end; /* Align actions to the right */
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 20px 10px;
+  }
+  .container {
+    padding: 20px;
+    border-radius: 15px;
+  }
+  .title {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+  }
+  .form input,
+  .form select,
+  .form button,
+  .options input,
+  .options select,
+  .options button {
+    padding: 12px 15px;
+    font-size: 0.95rem;
+  }
+  .task {
+    padding: 15px;
+    border-radius: 10px;
+  }
+  .task .text {
+    font-size: 1rem;
+  }
+  .task .meta {
+    font-size: 0.85rem;
+    gap: 8px;
+  }
+  .task .priority {
+    padding: 3px 8px;
+    font-size: 0.8rem;
+  }
+  .task .actions button {
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
+  }
 }
