@@ -84,6 +84,23 @@ export default function App() {
     <div className="container">
       <h1 className="title">📝Liste des tâches</h1>
 
+      <div className="options">
+        <input
+          type="text"
+          placeholder="🔍 Rechercher une tâche..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+          <option value="none">Trier par...</option>
+          <option value="name">🔤 Nom</option>
+          <option value="date">📅 Date</option>
+          <option value="priority">🔥 Priorité</option>
+        </select>
+        <button className="clear-btn" onClick={clearAll}>
+          🗑️ Vider
+        </button>
+      </div>
       <div className="form">
         <input
           type="text"
@@ -103,24 +120,6 @@ export default function App() {
         />
         <button onClick={addOrUpdateTask}>
           {editingIndex !== null ? "💾 Modifier" : "➕ Ajouter"}
-        </button>
-      </div>
-
-      <div className="options">
-        <input
-          type="text"
-          placeholder="🔍 Rechercher une tâche..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-          <option value="none">Trier par...</option>
-          <option value="name">🔤 Nom</option>
-          <option value="date">📅 Date</option>
-          <option value="priority">🔥 Priorité</option>
-        </select>
-        <button className="clear-btn" onClick={clearAll}>
-          🗑️ Vider
         </button>
       </div>
 
