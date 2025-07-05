@@ -1,146 +1,91 @@
-import { useState } from "react";
-import "./styles.css";
+import React, { useEffect, useState } from "react";
+import "./style.css";
+
+const concepts = [
+  { id: 1, type: "concept", value: "useState", match: 101 },
+  { id: 101, type: "definition", value: "Permet de gérer l'état local dans un composant fonctionnel.", match: 1 },
+  { id: 2, type: "concept", value: "useEffect", match: 102 },
+  { id: 102, type: "definition", value: "Exécute une fonction après le rendu du composant.", match: 2 },
+  { id: 3, type: "concept", value: "props", match: 103 },
+  { id: 103, type: "definition", value: "Données passées d’un composant parent à un enfant.", match: 3 },
+  { id: 4, type: "concept", value: "JSX", match: 104 },
+  { id: 104, type: "definition", value: "Syntaxe qui mélange JavaScript et HTML.", match: 4 },
+];
+
+function shuffle(array) {
+  const copy = [...array];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
 
 export default function App() {
-  const [task, setTask] = useState("");
-  const [priority, setPriority] = useState("moyenne");
-  const [dueDate, setDueDate] = useState("");
-  const [tasks, setTasks] = useState([]);
-  const [editingIndex, setEditingIndex] = useState(null);
-  const [search, setSearch] = useState("");
-  const [sortBy, setSortBy] = useState("none");
+  const [cards, setCards] = useState([]);
+  const [flipped, setFlipped] = useState([]);
+  const [matched, setMatched] = useState([]);
+  const [moves, setMoves] = useState(0);
 
-  const addOrUpdateTask = () => {
-    if (task.trim() === "") return;
-    const newTask = { text: task, done: false, priority, dueDate };
-    if (editingIndex !== null) {
-      const updated = [...tasks];
-      updated[editingIndex] = newTask;
-      setTasks(updated);
-      setEditingIndex(null);
-    } else {
-      setTasks([...tasks, newTask]);
+  useEffect(() => {
+    resetGame();
+  }, []);
+
+  const resetGame = () => {
+    setCards(shuffle(concepts));
+    setFlipped([]);
+    setMatched([]);
+    setMoves(0);
+  };
+
+  const handleClick = (index) => {
+    if (flipped.length === 2 || flipped.includes(index) || matched.includes(cards[index].id)) return;
+    setFlipped([...flipped, index]);
+    setMoves(moves + 1);
+  };
+
+  useEffect(() => {
+    if (flipped.length === 2) {
+      const [first, second] = flipped;
+      const card1 = cards[first];
+      const card2 = cards[second];
+      if (card1.match === card2.id) {
+        setMatched((prev) => [...prev, card1.id, card2.id]);
+      }
+      setTimeout(() => setFlipped([]), 1000);
     }
-    setTask("");
-    setPriority("moyenne");
-    setDueDate("");
-  };
+  }, [flipped, cards]);
 
-  const toggleTask = (index) => {
-    const updated = [...tasks];
-    updated[index].done = !updated[index].done;
-    setTasks(updated);
-  };
-
-  const deleteTask = (index) => {
-    const updated = tasks.filter((_, i) => i !== index);
-    setTasks(updated);
-  };
-
-  const editTask = (index) => {
-    const t = tasks[index];
-    setTask(t.text);
-    setPriority(t.priority);
-    setDueDate(t.dueDate);
-    setEditingIndex(index);
-  };
-
-  const viewDetails = (task) => {
-    alert(
-      `📝 Tâche : ${task.text}\n📅 Date : ${
-        task.dueDate || "Non définie"
-      }\n🎯 Priorité : ${task.priority}`
-    );
-  };
-
-  const clearAll = () => {
-    if (window.confirm("Voulez-vous vraiment vider toute la liste ?")) {
-      setTasks([]);
-    }
-  };
-
-  const sortTasks = (list) => {
-    const copy = [...list];
-    switch (sortBy) {
-      case "date":
-        return copy.sort((a, b) =>
-          (a.dueDate || "").localeCompare(b.dueDate || "")
-        );
-      case "priority":
-        const levels = { haute: 1, moyenne: 2, basse: 3 };
-        return copy.sort((a, b) => levels[a.priority] - levels[b.priority]);
-      case "name":
-        return copy.sort((a, b) => a.text.localeCompare(b.text));
-      default:
-        return copy;
-    }
-  };
-
-  const filteredTasks = sortTasks(
-    tasks.filter((t) => t.text.toLowerCase().includes(search.toLowerCase()))
-  );
+  const isFlipped = (index) => flipped.includes(index) || matched.includes(cards[index].id);
 
   return (
-    <div className="container">
-      <h1 className="title">📝Liste des tâches</h1>
-
-      <div className="options">
-        <input
-          type="text"
-          placeholder="🔍 Rechercher une tâche..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-          <option value="none">Trier par...</option>
-          <option value="name">🔤 Nom</option>
-          <option value="date">📅 Date</option>
-          <option value="priority">🔥 Priorité</option>
-        </select>
-        <button className="clear-btn" onClick={clearAll}>
-          🗑️ Vider
-        </button>
-      </div>
-      <div className="form">
-        <input
-          type="text"
-          value={task}
-          placeholder="Ajouter une tâche..."
-          onChange={(e) => setTask(e.target.value)}
-        />
-        <select value={priority} onChange={(e) => setPriority(e.target.value)}>
-          <option value="basse">🟢 Basse</option>
-          <option value="moyenne">🟠 Moyenne</option>
-          <option value="haute">🔴 Haute</option>
-        </select>
-        <input
-          type="date"
-          value={dueDate}
-          onChange={(e) => setDueDate(e.target.value)}
-        />
-        <button onClick={addOrUpdateTask}>
-          {editingIndex !== null ? "💾 Modifier" : "➕ Ajouter"}
-        </button>
+    <div className="app">
+      <h1>🧠 Memory Cards – Apprends React</h1>
+      <div className="stats">
+        <p>🧮 Coups : {moves}</p>
+        <button onClick={resetGame}>🔁 Rejouer</button>
       </div>
 
-      <ul className="task-list">
-        {filteredTasks.map((t, i) => (
-          <li key={i} className={`task ${t.done ? "done" : ""}`}>
-            <div className="info" onClick={() => toggleTask(i)}>
-              <span className="text">{t.text}</span>
-              <div className="meta">
-                <span className={`priority ${t.priority}`}>{t.priority}</span>
-                {t.dueDate && <span className="date">📅 {t.dueDate}</span>}
-              </div>
+      <div className="grid">
+        {cards.map((card, index) => (
+          <div
+            key={card.id}
+            className={`card ${isFlipped(index) ? "flipped" : ""}`}
+            onClick={() => handleClick(index)}
+          >
+            <div className="card-inner">
+              <div className="card-front">❓</div>
+              <div className="card-back">{card.value}</div>
             </div>
-            <div className="actions">
-              <button onClick={() => viewDetails(t)}>🔍</button>
-              <button onClick={() => editTask(i)}>✏️</button>
-              <button onClick={() => deleteTask(i)}>❌</button>
-            </div>
-          </li>
+          </div>
         ))}
-      </ul>
+      </div>
+
+      {matched.length === cards.length && (
+        <div className="win-message">
+          🎉 Bravo ! Tu as terminé en {moves} coups !
+        </div>
+      )}
     </div>
   );
 }
